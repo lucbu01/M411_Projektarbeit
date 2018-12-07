@@ -17,6 +17,8 @@ struPerson* create(int anzahl) {
     struPerson* pStart = NULL;
     for (int i = 0; i < anzahl; i++) {
         struPerson* pNew = (struPerson*)malloc(sizeof(struPerson));
+        pNew->vorname[0] = rand() % 26 + 65;
+        pNew->vorname[1] = '\0';
 
         //Zufällige initialisierung der Werte vorname, nachname, Jahrgang
 
