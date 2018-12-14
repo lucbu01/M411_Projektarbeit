@@ -26,11 +26,20 @@ struPerson* create(int anzahl) {
         pNew->jahrgang = rand() % 108 + 1900;
 
         pNew->pNext = NULL;
-        if (pStart == NULL) pStart = pNew;
+		if (pStart == NULL) pStart = pNew;
         if (pLast != NULL) pLast->pNext = pNew;
         pLast = pNew;
     }
     return pStart;
+}
+
+void deleteList(struPerson* pStart) {
+	struPerson* pNext;
+
+	for (struPerson* pElement = pStart; pElement != NULL; pElement = pNext) {
+		pNext = pElement->pNext;
+		free(pElement);
+	}
 }
 
 // Gibt alle Elemente der Liste aus
@@ -43,5 +52,6 @@ void output(struPerson* pStart) {
 void main() {
     struPerson *pStart = create(5);
     output(pStart);
+	deleteList(pStart);
     system("pause");
 }
