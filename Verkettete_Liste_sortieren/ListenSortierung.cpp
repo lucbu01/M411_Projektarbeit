@@ -65,6 +65,11 @@ struPerson* deleteElement(struPerson* pStart, const char* pVorname, const char* 
 	return pStart;
 }
 
+// Sortiert die Liste nach Nachname und Vorname
+struPerson* sortList(struPerson* pStart) {
+    // NOT YET IMPLEMENTED (strcmp)
+}
+
 // Gibt alle Elemente der Liste aus
 void output(struPerson* pStart) {
     for (struPerson* pTemp = pStart; pTemp != NULL; pTemp = pTemp->pNext) {
