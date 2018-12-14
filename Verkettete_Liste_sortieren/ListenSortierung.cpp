@@ -12,15 +12,18 @@ typedef struct Person {
 
 // Erstellt eine Liste von definierter Anzahl Elementen
 struPerson* create(int anzahl) {
-    srand(time(NULL));
+    srand((unsigned) time(NULL));
     struPerson* pLast = NULL;
     struPerson* pStart = NULL;
     for (int i = 0; i < anzahl; i++) {
         struPerson* pNew = (struPerson*)malloc(sizeof(struPerson));
-        pNew->vorname[0] = rand() % 26 + 65;
-        pNew->vorname[1] = '\0';
 
         //Zufällige initialisierung der Werte vorname, nachname, Jahrgang
+        pNew->vorname[0] = rand() % 26 + 65;
+        pNew->vorname[1] = '\0';
+        pNew->nachname[0] = rand() % 26 + 65;
+        pNew->nachname[1] = '\0';
+        pNew->jahrgang = rand() % 108 + 1900;
 
         pNew->pNext = NULL;
         if (pStart == NULL) pStart = pNew;
@@ -33,7 +36,7 @@ struPerson* create(int anzahl) {
 // Gibt alle Elemente der Liste aus
 void output(struPerson* pStart) {
     for (struPerson* pTemp = pStart; pTemp != NULL; pTemp = pTemp->pNext) {
-        printf("Element: %s %s\n", pTemp->vorname, pTemp->nachname);
+        printf("Element: %s %s %i\n", pTemp->vorname, pTemp->nachname, pTemp->jahrgang);
     }
 }
 
