@@ -18,7 +18,7 @@ struPerson* create(int anzahl) {
     for (int i = 0; i < anzahl; i++) {
         struPerson* pNew = (struPerson*)malloc(sizeof(struPerson));
 
-        //Zufällige initialisierung der Werte vorname, nachname, Jahrgang
+        //Zufaellige initialisierung der Werte vorname, nachname, Jahrgang
         pNew->vorname[0] = rand() % 26 + 65;
         pNew->vorname[1] = '\0';
         pNew->nachname[0] = rand() % 26 + 65;
@@ -33,6 +33,7 @@ struPerson* create(int anzahl) {
     return pStart;
 }
 
+// Loescht die Liste und gibt den Speicherplatz frei
 void deleteList(struPerson* pStart) {
 	struPerson* pNext = NULL;
 
@@ -42,6 +43,7 @@ void deleteList(struPerson* pStart) {
 	}
 }
 
+// Loescht Elemente aus einer Liste und gibt den Speicherplatz frei
 struPerson* deleteElement(struPerson* pStart, const char* pVorname, const char* pNachname) {
 	struPerson* pNext = NULL;
 	struPerson* pLast = NULL;
@@ -81,6 +83,7 @@ void main() {
 	strcpy_s(pStart->pNext->pNext->pNext->vorname, "C");
 	strcpy_s(pStart->pNext->pNext->pNext->nachname, "Z");
 	output(pStart);
+    printf("\n");
 	pStart = deleteElement(pStart, "L", "A");
 	pStart = deleteElement(pStart, "C", "Z");
 
