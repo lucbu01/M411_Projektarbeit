@@ -23,7 +23,7 @@ struPerson* create(int anzahl) {
         pNew->vorname[1] = '\0';
         pNew->nachname[0] = rand() % 26 + 65;
         pNew->nachname[1] = '\0';
-        pNew->jahrgang = rand() % 108 + 1900;
+        pNew->jahrgang = rand() % 119 + 1900;
 
         pNew->pNext = NULL;
 		if (pStart == NULL) pStart = pNew;
@@ -34,12 +34,33 @@ struPerson* create(int anzahl) {
 }
 
 void deleteList(struPerson* pStart) {
-	struPerson* pNext;
+	struPerson* pNext = NULL;
 
 	for (struPerson* pElement = pStart; pElement != NULL; pElement = pNext) {
 		pNext = pElement->pNext;
 		free(pElement);
 	}
+}
+
+struPerson* deleteElement(struPerson* pStart, const char* pVorname, const char* pNachname) {
+	struPerson* pNext = NULL;
+	struPerson* pLast = NULL;
+
+	for (struPerson* pElement = pStart; pElement != NULL; pElement = pNext) {
+		pNext = pElement->pNext;
+		if (strcmp(pElement->vorname, pVorname) == 0 && strcmp(pElement->nachname, pNachname) == 0) {
+			free(pElement);
+			if (pLast == NULL) {
+				pStart = pNext;
+			}
+			else {
+				pLast->pNext = pNext;
+			}
+		} else {
+			pLast = pElement;
+		}
+	}
+	return pStart;
 }
 
 // Gibt alle Elemente der Liste aus
@@ -51,6 +72,18 @@ void output(struPerson* pStart) {
 
 void main() {
     struPerson *pStart = create(5);
+
+	//test deleteElement
+	strcpy_s(pStart->vorname, "L");
+	strcpy_s(pStart->nachname, "A");
+	strcpy_s(pStart->pNext->vorname, "C");
+	strcpy_s(pStart->pNext->nachname, "Z");
+	strcpy_s(pStart->pNext->pNext->pNext->vorname, "C");
+	strcpy_s(pStart->pNext->pNext->pNext->nachname, "Z");
+	output(pStart);
+	pStart = deleteElement(pStart, "L", "A");
+	pStart = deleteElement(pStart, "C", "Z");
+
     output(pStart);
 	deleteList(pStart);
     system("pause");
