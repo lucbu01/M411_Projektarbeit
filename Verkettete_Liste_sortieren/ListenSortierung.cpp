@@ -67,13 +67,47 @@ struPerson* deleteElement(struPerson* pStart, const char* pVorname, const char* 
 
 // Sortiert die Liste nach Nachname und Vorname
 struPerson* sortList(struPerson* pStart) {
-    // NOT YET IMPLEMENTED (strcmp)
+	//bezieht sich auf pElement, A ist kleiner als D
+	bool isGreater = false;
+	bool sorted = false;
+	struPerson* pLastElement = NULL;
+	struPerson* pTemp = NULL;
+	while(!sorted) {
+		sorted = true;
+		for (struPerson* pElement = pStart; pElement != NULL; pElement = pElement->pNext) {
+			if (strcmp(pElement->nachname, pElement->pNext->nachname) > 0) {
+				isGreater = true;
+			}
+			else if (strcmp(pElement->nachname, pElement->pNext->nachname) == 0) {
+				if (strcmp(pElement->vorname, pElement->pNext->vorname) > 0) {
+					isGreater = true;
+				}
+			}
+
+			if (isGreater) {
+				sorted = false;
+				pTemp = pElement->pNext;
+				if (pElement == pStart) {
+					pStart = pElement;
+				}
+				else {
+					pLastElement->pNext = pElement->pNext;
+				}
+
+				pElement->pNext = pElement->pNext->pNext;
+				pElement->pNext->pNext = pElement;
+				isGreater = false;
+			}
+			pLastElement = pElement;
+		}
+	}
+	return pStart;
 }
 
 // Gibt alle Elemente der Liste aus
 void output(struPerson* pStart) {
     for (struPerson* pTemp = pStart; pTemp != NULL; pTemp = pTemp->pNext) {
-        printf("Element: %s %s %i\n", pTemp->vorname, pTemp->nachname, pTemp->jahrgang);
+        printf("Element: %s %s %i\n", pTemp->nachname, pTemp->vorname, pTemp->jahrgang);
     }
 }
 
@@ -89,8 +123,9 @@ void main() {
 	strcpy_s(pStart->pNext->pNext->pNext->nachname, "Z");
 	output(pStart);
     printf("\n");
-	pStart = deleteElement(pStart, "L", "A");
-	pStart = deleteElement(pStart, "C", "Z");
+	//pStart = deleteElement(pStart, "L", "A");
+	//pStart = deleteElement(pStart, "C", "Z");
+	pStart = sortList(pStart);
 
     output(pStart);
 	deleteList(pStart);
