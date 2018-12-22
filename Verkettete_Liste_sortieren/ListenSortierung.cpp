@@ -104,32 +104,32 @@ struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson*
 	return pStart;
 }
 
-/*
+/* Problem: manchmal entsteht ein loop!
 Author: Ghezzi Lars
 Datum: 22.12.2018
 Sortiert die Liste nach dem BubbleSort Prinzip.
 */
 struPerson* sortListWithBubbleSort(struPerson* pStart) {
-	//0 or less == false
+	//0 ôder weniger == false
 	int doneChanges = 0;
 	struPerson* pElementLast = NULL;
 	do {
 		doneChanges = 0;
 		for (struPerson* pElement = pStart; pElement->pNext != NULL; pElement = pElement->pNext) {
 			struPerson* pElementToCompare = pElement->pNext;
-			//compare if change must be
+
 			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
-				//change Element
+				//wechselt Element
 				pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElement);
-				//otherweis one would be jumped
+				//anderenfalles würde eins übersprungen werden, da in der For-schleife vorwärts gegangen wird
 				pElement = pElementToCompare;
 				doneChanges++;
 			}
 			else if (strcmp(pElement->nachname, pElementToCompare->nachname) == 0) {
 				if (strcmp(pElement->vorname, pElementToCompare->vorname) > 0) {
-					//change Element
+					//wechselt Element
 					pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElement);
-					//otherweis one would be jumped
+					//anderenfalles würde eins übersprungen werden, da in der For-schleife vorwärts gegangen wird
 					pElement = pElementToCompare;
 					doneChanges++;
 				}
@@ -152,9 +152,8 @@ struPerson* sortListWithSelectSort(struPerson* pStart) {
 		pElementToCompareLast = pElement;
 		for (struPerson* pElementToCompare = pElement->pNext; pElementToCompare != NULL; pElementToCompare = pElementToCompare->pNext) {
 
-			//compare if change must be
 			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
-				//change Element
+				//wechselt Element
 				pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElementToCompareLast);
 				struPerson* pTemp = pElement;
 				pElement = pElementToCompare;
@@ -162,7 +161,7 @@ struPerson* sortListWithSelectSort(struPerson* pStart) {
 			}
 			else if (strcmp(pElement->nachname, pElementToCompare->nachname) == 0) {
 				if (strcmp(pElement->vorname, pElementToCompare->vorname) > 0) {
-					//change Element
+					//wechselt Element
 					pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElementToCompareLast);
 					struPerson* pTemp = pElement;
 					pElement = pElementToCompare;
@@ -180,12 +179,12 @@ void main() {
     struPerson *pStart = create(5);
 
 	//test deleteElement
-	strcpy_s(pStart->vorname, "L");
+	/*strcpy_s(pStart->vorname, "L");
 	strcpy_s(pStart->nachname, "A");
 	strcpy_s(pStart->pNext->vorname, "D");
 	strcpy_s(pStart->pNext->nachname, "Z");
 	strcpy_s(pStart->pNext->pNext->pNext->vorname, "C");
-	strcpy_s(pStart->pNext->pNext->pNext->nachname, "Z");
+	strcpy_s(pStart->pNext->pNext->pNext->nachname, "Z");*/
 	output(pStart);
     printf("\n");
 	//pStart = deleteElement(pStart, "L", "A");
