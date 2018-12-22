@@ -112,73 +112,69 @@ void output(struPerson* pStart) {
 }
 
 /*
- *	Prinzip: SelectSort
- *	Author: Ghezzi Lars
- *	Datum: 22.12.2018
+Author: Ghezzi Lars	
+Datum: 22.12.2018	
+Tauscht die Positionen Zweier Elemente.
+*/
+struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson* pElementToChange, struPerson* pElementLast, struPerson* pElementToChangeLast) {
+	struPerson* pElementNext = pElement->pNext;
+	struPerson* pElementToChangeNext = pElementToChange->pNext;
 
- *	Problem: Pointer an schluss setzen geht nicht!!!
+	if (pElement == pStart) {
+		pStart = pElementToChange;
+	}
 
- *	Sortiert die Liste nach dem SelectSort Prinzip.
+	if (pElementLast != NULL) {
+		pElementLast->pNext = pElementToChange;
+	}
+
+	if (pElement->pNext == pElementToChange) {
+		pElementToChange->pNext = pElement;
+		pElement->pNext = pElementToChangeNext;
+	}
+	else {
+
+		pElementToChange->pNext = pElementNext;
+		pElementToChangeLast->pNext = pElement;
+		pElement->pNext = pElementToChangeNext;
+	}
+
+	return pStart;
+}
+
+/*
+Prinzip: SelectSort
+Author: Ghezzi Lars
+Datum: 22.12.2018
+Sortiert die Liste nach dem SelectSort Prinzip.
 */
 struPerson* sortListWithSelectSort(struPerson* pStart) {
-	struPerson* pLastElementToCompare = NULL;
-
+	struPerson* pElementLast = NULL;
+	struPerson* pElementToCompareLast = NULL;
 	for (struPerson* pElement = pStart; pElement->pNext != NULL; pElement = pElement->pNext) {
-		pLastElementToCompare = pElement;
-		struPerson* pElementToCompare = pElement->pNext;
-		do {
-			//boolean 0 = false, 1 true
-			short isGreater = 0;
+		pElementToCompareLast = pElement;
+		for (struPerson* pElementToCompare = pElement->pNext; pElementToCompare != NULL; pElementToCompare = pElementToCompare->pNext) {
 
 			//compare if change must be
 			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
-				isGreater = 1;
+				pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElementToCompareLast);
+				struPerson* pTemp = pElement;
+				pElement = pElementToCompare;
+				pElementToCompare = pTemp;
 			}
 			else if (strcmp(pElement->nachname, pElementToCompare->nachname) == 0) {
 				if (strcmp(pElement->vorname, pElementToCompare->vorname) > 0) {
-					isGreater = 1;
-				}
-			}
-
-			//change elements
-			struPerson* pTemp = pElement;
-			if (isGreater > 0) {
-				struPerson* pTempElementToCompareNext = pElementToCompare->pNext;
-
-				//umhänken
-				//checkt ob der Pointer am anfang ist
-				if (pStart == pElement) {
-					pStart = pElementToCompare;
-				}
-				//prüft ob die Elemente hintereinander sind
-				if (pTemp->pNext == pElementToCompare) {
-					pElementToCompare->pNext = pElement;
-					pElement->pNext = pTempElementToCompareNext;
-					pElement = pElementToCompare;
-					pElementToCompare = pTemp;
-					pLastElementToCompare = pElement;
-				}
-				else {
-					pElementToCompare->pNext = pTemp->pNext;
-					pElement->pNext = pTempElementToCompareNext;
-					pElementToCompare->pNext->pNext = pElement;
+					pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElementToCompareLast);
+					struPerson* pTemp = pElement;
 					pElement = pElementToCompare;
 					pElementToCompare = pTemp;
 				}
 			}
-			else {
-				//setzte die Pointer der letzten Elemente, für die nächste Überprüfung
-				pLastElementToCompare = pLastElementToCompare;
-			}
-
-			if (pElementToCompare->pNext == NULL) {
-			}
-			else {
-				pElementToCompare = pElementToCompare->pNext;
-			}
+			pElementToCompareLast = pElementToCompare;
 			//output(pStart);
 			//printf("\n");
-		} while (pElementToCompare->pNext != NULL);
+		}
+		pElementLast = pElement;
 	}
 	return pStart;
 }
@@ -187,12 +183,12 @@ void main() {
     struPerson *pStart = create(5);
 
 	//test deleteElement
-	strcpy_s(pStart->vorname, "L");
+	/*strcpy_s(pStart->vorname, "L");
 	strcpy_s(pStart->nachname, "A");
 	strcpy_s(pStart->pNext->vorname, "D");
 	strcpy_s(pStart->pNext->nachname, "Z");
 	strcpy_s(pStart->pNext->pNext->pNext->vorname, "C");
-	strcpy_s(pStart->pNext->pNext->pNext->nachname, "Z");
+	strcpy_s(pStart->pNext->pNext->pNext->nachname, "Z");*/
 	output(pStart);
     printf("\n");
 	//pStart = deleteElement(pStart, "L", "A");
