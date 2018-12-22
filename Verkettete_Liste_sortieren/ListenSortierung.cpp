@@ -111,13 +111,85 @@ void output(struPerson* pStart) {
     }
 }
 
+/*
+ *	Prinzip: SelectSort
+ *	Author: Ghezzi Lars
+ *	Datum: 22.12.2018
+
+ *	Problem: Pointer an schluss setzen geht nicht!!!
+
+ *	Sortiert die Liste nach dem SelectSort Prinzip.
+*/
+struPerson* sortListWithSelectSort(struPerson* pStart) {
+	struPerson* pLastElementToCompare = NULL;
+
+	for (struPerson* pElement = pStart; pElement->pNext != NULL; pElement = pElement->pNext) {
+		pLastElementToCompare = pElement;
+		struPerson* pElementToCompare = pElement->pNext;
+		do {
+			//boolean 0 = false, 1 true
+			short isGreater = 0;
+
+			//compare if change must be
+			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
+				isGreater = 1;
+			}
+			else if (strcmp(pElement->nachname, pElementToCompare->nachname) == 0) {
+				if (strcmp(pElement->vorname, pElementToCompare->vorname) > 0) {
+					isGreater = 1;
+				}
+			}
+
+			//change elements
+			struPerson* pTemp = pElement;
+			if (isGreater > 0) {
+				struPerson* pTempElementToCompareNext = pElementToCompare->pNext;
+
+				//umhänken
+				//checkt ob der Pointer am anfang ist
+				if (pStart == pElement) {
+					pStart = pElementToCompare;
+				}
+				//prüft ob die Elemente hintereinander sind
+				if (pTemp->pNext == pElementToCompare) {
+					pElementToCompare->pNext = pElement;
+					pElement->pNext = pTempElementToCompareNext;
+					pElement = pElementToCompare;
+					pElementToCompare = pTemp;
+					pLastElementToCompare = pElement;
+				}
+				else {
+					pElementToCompare->pNext = pTemp->pNext;
+					pElement->pNext = pTempElementToCompareNext;
+					pElementToCompare->pNext->pNext = pElement;
+					pElement = pElementToCompare;
+					pElementToCompare = pTemp;
+				}
+			}
+			else {
+				//setzte die Pointer der letzten Elemente, für die nächste Überprüfung
+				pLastElementToCompare = pLastElementToCompare;
+			}
+
+			if (pElementToCompare->pNext == NULL) {
+			}
+			else {
+				pElementToCompare = pElementToCompare->pNext;
+			}
+			//output(pStart);
+			//printf("\n");
+		} while (pElementToCompare->pNext != NULL);
+	}
+	return pStart;
+}
+
 void main() {
     struPerson *pStart = create(5);
 
 	//test deleteElement
 	strcpy_s(pStart->vorname, "L");
 	strcpy_s(pStart->nachname, "A");
-	strcpy_s(pStart->pNext->vorname, "C");
+	strcpy_s(pStart->pNext->vorname, "D");
 	strcpy_s(pStart->pNext->nachname, "Z");
 	strcpy_s(pStart->pNext->pNext->pNext->vorname, "C");
 	strcpy_s(pStart->pNext->pNext->pNext->nachname, "Z");
@@ -125,7 +197,7 @@ void main() {
     printf("\n");
 	//pStart = deleteElement(pStart, "L", "A");
 	//pStart = deleteElement(pStart, "C", "Z");
-	pStart = sortList(pStart);
+	pStart = sortListWithSelectSort(pStart);
 
     output(pStart);
 	deleteList(pStart);
