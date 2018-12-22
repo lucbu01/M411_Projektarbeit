@@ -124,16 +124,17 @@ struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson*
 		pStart = pElementToChange;
 	}
 
+	//wenn es das erste ist, gibt es keines zuvor
 	if (pElementLast != NULL) {
 		pElementLast->pNext = pElementToChange;
 	}
 
+	//schaut ob die Elemente hintereinander sind
 	if (pElement->pNext == pElementToChange) {
 		pElementToChange->pNext = pElement;
 		pElement->pNext = pElementToChangeNext;
 	}
 	else {
-
 		pElementToChange->pNext = pElementNext;
 		pElementToChangeLast->pNext = pElement;
 		pElement->pNext = pElementToChangeNext;
@@ -157,6 +158,7 @@ struPerson* sortListWithSelectSort(struPerson* pStart) {
 
 			//compare if change must be
 			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
+				//change Element
 				pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElementToCompareLast);
 				struPerson* pTemp = pElement;
 				pElement = pElementToCompare;
@@ -164,6 +166,7 @@ struPerson* sortListWithSelectSort(struPerson* pStart) {
 			}
 			else if (strcmp(pElement->nachname, pElementToCompare->nachname) == 0) {
 				if (strcmp(pElement->vorname, pElementToCompare->vorname) > 0) {
+					//change Element
 					pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElementToCompareLast);
 					struPerson* pTemp = pElement;
 					pElement = pElementToCompare;
@@ -171,8 +174,6 @@ struPerson* sortListWithSelectSort(struPerson* pStart) {
 				}
 			}
 			pElementToCompareLast = pElementToCompare;
-			//output(pStart);
-			//printf("\n");
 		}
 		pElementLast = pElement;
 	}
@@ -183,12 +184,12 @@ void main() {
     struPerson *pStart = create(5);
 
 	//test deleteElement
-	/*strcpy_s(pStart->vorname, "L");
+	strcpy_s(pStart->vorname, "L");
 	strcpy_s(pStart->nachname, "A");
 	strcpy_s(pStart->pNext->vorname, "D");
 	strcpy_s(pStart->pNext->nachname, "Z");
 	strcpy_s(pStart->pNext->pNext->pNext->vorname, "C");
-	strcpy_s(pStart->pNext->pNext->pNext->nachname, "Z");*/
+	strcpy_s(pStart->pNext->pNext->pNext->nachname, "Z");
 	output(pStart);
     printf("\n");
 	//pStart = deleteElement(pStart, "L", "A");
