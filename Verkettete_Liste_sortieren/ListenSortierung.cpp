@@ -65,45 +65,6 @@ struPerson* deleteElement(struPerson* pStart, const char* pVorname, const char* 
 	return pStart;
 }
 
-// Sortiert die Liste nach Nachname und Vorname
-struPerson* sortList(struPerson* pStart) {
-	//bezieht sich auf pElement, A ist kleiner als D
-	bool isGreater = false;
-	bool sorted = false;
-	struPerson* pLastElement = NULL;
-	struPerson* pTemp = NULL;
-	while(!sorted) {
-		sorted = true;
-		for (struPerson* pElement = pStart; pElement != NULL; pElement = pElement->pNext) {
-			if (strcmp(pElement->nachname, pElement->pNext->nachname) > 0) {
-				isGreater = true;
-			}
-			else if (strcmp(pElement->nachname, pElement->pNext->nachname) == 0) {
-				if (strcmp(pElement->vorname, pElement->pNext->vorname) > 0) {
-					isGreater = true;
-				}
-			}
-
-			if (isGreater) {
-				sorted = false;
-				pTemp = pElement->pNext;
-				if (pElement == pStart) {
-					pStart = pElement;
-				}
-				else {
-					pLastElement->pNext = pElement->pNext;
-				}
-
-				pElement->pNext = pElement->pNext->pNext;
-				pElement->pNext->pNext = pElement;
-				isGreater = false;
-			}
-			pLastElement = pElement;
-		}
-	}
-	return pStart;
-}
-
 // Gibt alle Elemente der Liste aus
 void output(struPerson* pStart) {
     for (struPerson* pTemp = pStart; pTemp != NULL; pTemp = pTemp->pNext) {
@@ -144,7 +105,42 @@ struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson*
 }
 
 /*
-Prinzip: SelectSort
+Author: Ghezzi Lars
+Datum: 22.12.2018
+Sortiert die Liste nach dem BubbleSort Prinzip.
+*/
+struPerson* sortListWithBubbleSort(struPerson* pStart) {
+	//0 or less == false
+	int doneChanges = 0;
+	struPerson* pElementLast = NULL;
+	do {
+		doneChanges = 0;
+		for (struPerson* pElement = pStart; pElement->pNext != NULL; pElement = pElement->pNext) {
+			struPerson* pElementToCompare = pElement->pNext;
+			//compare if change must be
+			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
+				//change Element
+				pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElement);
+				//otherweis one would be jumped
+				pElement = pElementToCompare;
+				doneChanges++;
+			}
+			else if (strcmp(pElement->nachname, pElementToCompare->nachname) == 0) {
+				if (strcmp(pElement->vorname, pElementToCompare->vorname) > 0) {
+					//change Element
+					pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElement);
+					//otherweis one would be jumped
+					pElement = pElementToCompare;
+					doneChanges++;
+				}
+			}
+			pElementLast = pElement;
+		}
+	} while (doneChanges > 0); //if there are 0 changes the list is sorted
+	return pStart;
+}
+
+/*
 Author: Ghezzi Lars
 Datum: 22.12.2018
 Sortiert die Liste nach dem SelectSort Prinzip.
@@ -194,7 +190,7 @@ void main() {
     printf("\n");
 	//pStart = deleteElement(pStart, "L", "A");
 	//pStart = deleteElement(pStart, "C", "Z");
-	pStart = sortListWithSelectSort(pStart);
+	pStart = sortListWithBubbleSort(pStart);
 
     output(pStart);
 	deleteList(pStart);
