@@ -10,8 +10,12 @@ typedef struct Person {
     struct Person* pNext;
 } struPerson;
 
-// Erstellt eine Liste von definierter Anzahl Elementen
-struPerson* create(int anzahl) {
+/*
+	Autor: Ghezzi Lars, Bucher Luca
+	Datum: 14.12.2018
+	Erstellt eine Liste von definierter Anzahl Elementen.
+*/
+struPerson* createList(int anzahl) {
     srand((unsigned) time(NULL));
     struPerson* pLast = NULL;
     struPerson* pStart = NULL;
@@ -33,7 +37,11 @@ struPerson* create(int anzahl) {
     return pStart;
 }
 
-// Loescht die Liste und gibt den Speicherplatz frei
+/*
+	Autor: Ghezzi Lars, Bucher Luca
+	Datum: 14.12.2018
+	Loescht die Liste und gibt den Speicherplatz frei.
+*/
 void deleteList(struPerson* pStart) {
 	struPerson* pNext = NULL;
 
@@ -43,7 +51,11 @@ void deleteList(struPerson* pStart) {
 	}
 }
 
-// Loescht Elemente aus einer Liste und gibt den Speicherplatz frei
+/*
+	Autor: Ghezzi Lars, Bucher Luca
+	Datum: 14.12.2018
+	Loescht Elemente aus einer Liste und gibt den Speicherplatz frei.
+*/
 struPerson* deleteElement(struPerson* pStart, const char* pVorname, const char* pNachname) {
 	struPerson* pNext = NULL;
 	struPerson* pLast = NULL;
@@ -65,7 +77,12 @@ struPerson* deleteElement(struPerson* pStart, const char* pVorname, const char* 
 	return pStart;
 }
 
-// Gibt alle Elemente der Liste aus
+
+/*
+	Autor: Ghezzi Lars, Bucher Luca
+	Datum: 14.12.2018
+	Gibt alle Elemente der Liste aus
+*/
 void output(struPerson* pStart) {
     for (struPerson* pTemp = pStart; pTemp != NULL; pTemp = pTemp->pNext) {
         printf("Element: %s %s %i\n", pTemp->nachname, pTemp->vorname, pTemp->jahrgang);
@@ -73,7 +90,7 @@ void output(struPerson* pStart) {
 }
 
 /*
-Author: Ghezzi Lars	
+Autor: Ghezzi Lars	
 Datum: 22.12.2018	
 Tauscht die Positionen Zweier Elemente.
 */
@@ -105,7 +122,7 @@ struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson*
 }
 
 /* Problem: manchmal entsteht ein loop!
-Author: Ghezzi Lars
+Autor: Ghezzi Lars
 Datum: 22.12.2018
 Sortiert die Liste nach dem BubbleSort Prinzip.
 */
@@ -141,7 +158,7 @@ struPerson* sortListWithBubbleSort(struPerson* pStart) {
 }
 
 /*
-Author: Ghezzi Lars
+Autor: Ghezzi Lars
 Datum: 22.12.2018
 Sortiert die Liste nach dem SelectSort Prinzip.
 */
@@ -175,23 +192,54 @@ struPerson* sortListWithSelectSort(struPerson* pStart) {
 	return pStart;
 }
 
+/*
+	Autor: Bucher Luca
+	Datum: 28.12.2018
+	Textbasiertes Menu mit den Listenfunktionen.
+*/
 void main() {
-    struPerson *pStart = create(5);
+	printf("Willkommen. . .\nWie viele Elemente soll Ihre Liste haben: ");
+	int anzahl = 0;
+	scanf_s("%i", &anzahl);
+	getchar();
 
-	//test deleteElement
-	/*strcpy_s(pStart->vorname, "L");
-	strcpy_s(pStart->nachname, "A");
-	strcpy_s(pStart->pNext->vorname, "D");
-	strcpy_s(pStart->pNext->nachname, "Z");
-	strcpy_s(pStart->pNext->pNext->pNext->vorname, "C");
-	strcpy_s(pStart->pNext->pNext->pNext->nachname, "Z");*/
-	output(pStart);
-    printf("\n");
-	//pStart = deleteElement(pStart, "L", "A");
-	//pStart = deleteElement(pStart, "C", "Z");
-	pStart = sortListWithBubbleSort(pStart);
+    struPerson *pStart = createList(anzahl);
 
-    output(pStart);
-	deleteList(pStart);
+	char input[100];
+	int wiederholen = 1;
+	while (wiederholen != 0) {
+		output(pStart);
+		printf("\nWaehlen Sie eine Option:\n\n");
+		printf("bubbleSort - Wendet den BubbleSort an der Liste an.\n");
+		printf("selectSort - Wendet den SelectSort an der Liste an.\n");
+		printf("deleteElement - Loescht ein gewuenschtes Element aus der Liste.\n");
+		printf("exit - Loescht die Liste und schliesst das Programm.\n\n>");
+		gets_s(input);
+
+		if (strcmp(input, "bubbleSort") == 0) {
+			sortListWithBubbleSort(pStart);
+		}
+		else if (strcmp(input, "selectSort") == 0) {
+			sortListWithSelectSort(pStart);
+		}
+		else if (strcmp(input, "deleteElement") == 0) {
+			printf("Vorname: ");
+			char vorname[40];
+			gets_s(vorname);
+			printf("Nachname: ");
+			char nachname[40];
+			gets_s(nachname);
+			pStart = deleteElement(pStart, vorname, nachname);
+		}
+		else if (strcmp(input, "exit") == 0) {
+			deleteList(pStart);
+			wiederholen = 0;
+		}
+		else {
+			printf("\nDie Anweisung wurde nicht gefunden.\n\n");
+		}
+
+	}
+
     system("pause");
 }
