@@ -22,7 +22,7 @@ struPerson* createList(int anzahl) {
     for (int i = 0; i < anzahl; i++) {
         struPerson* pNew = (struPerson*)malloc(sizeof(struPerson));
 
-        //Zufaellige initialisierung der Werte vorname, nachname, Jahrgang
+        // Zufaellige initialisierung der Werte vorname, nachname, Jahrgang
         pNew->vorname[0] = rand() % 26 + 65;
         pNew->vorname[1] = '\0';
         pNew->nachname[0] = rand() % 26 + 65;
@@ -90,9 +90,9 @@ void output(struPerson* pStart) {
 }
 
 /*
-Autor: Ghezzi Lars	
-Datum: 22.12.2018	
-Tauscht die Positionen Zweier Elemente.
+	Autor: Ghezzi Lars	
+	Datum: 22.12.2018	
+	Tauscht die Positionen Zweier Elemente.
 */
 struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson* pElementToChange, struPerson* pElementLast, struPerson* pElementToChangeLast) {
 	struPerson* pElementNext = pElement->pNext;
@@ -102,12 +102,12 @@ struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson*
 		pStart = pElementToChange;
 	}
 
-	//wenn es das erste ist, gibt es keines zuvor
+	// wenn es das erste ist, gibt es keines zuvor
 	if (pElementLast != NULL) {
 		pElementLast->pNext = pElementToChange;
 	}
 
-	//schaut ob die Elemente hintereinander sind
+	// schaut ob die Elemente hintereinander sind
 	if (pElement->pNext == pElementToChange) {
 		pElementToChange->pNext = pElement;
 		pElement->pNext = pElementToChangeNext;
@@ -122,12 +122,12 @@ struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson*
 }
 
 /* Problem: manchmal entsteht ein loop!
-Autor: Ghezzi Lars
-Datum: 22.12.2018
-Sortiert die Liste nach dem BubbleSort Prinzip.
+	Autor: Ghezzi Lars
+	Datum: 22.12.2018
+	Sortiert die Liste nach dem BubbleSort Prinzip.
 */
 struPerson* sortListWithBubbleSort(struPerson* pStart) {
-	//0 ôder weniger == false
+	// 0 oder weniger == false
 	int doneChanges = 0;
 	struPerson* pElementLast = NULL;
 	do {
@@ -153,14 +153,14 @@ struPerson* sortListWithBubbleSort(struPerson* pStart) {
 			}
 			pElementLast = pElement;
 		}
-	} while (doneChanges > 0); //if there are 0 changes the list is sorted
+	} while (doneChanges > 0); // Wenn es keine Aenderungen mehr gibt, ist die Liste sortiert
 	return pStart;
 }
 
 /*
-Autor: Ghezzi Lars
-Datum: 22.12.2018
-Sortiert die Liste nach dem SelectSort Prinzip.
+	Autor: Ghezzi Lars
+	Datum: 22.12.2018
+	Sortiert die Liste nach dem SelectSort Prinzip.
 */
 struPerson* sortListWithSelectSort(struPerson* pStart) {
 	struPerson* pElementLast = NULL;
