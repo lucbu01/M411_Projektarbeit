@@ -90,12 +90,12 @@ void output(struPerson* pStart) {
 }
 
 /*
-	Autor: Ghezzi Lars	
+	Autor: Ghezzi Lars, Bucher Luca
 	Datum: 22.12.2018	
 	Tauscht die Positionen Zweier Elemente.
 */
 struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson* pElementToChange, struPerson* pElementLast, struPerson* pElementToChangeLast) {
-	struPerson* pElementNext = pElement->pNext;
+	/*struPerson* pElementNext = pElement->pNext;
 	struPerson* pElementToChangeNext = pElementToChange->pNext;
 
 	if (pElement == pStart) {
@@ -117,6 +117,31 @@ struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson*
 		pElementToChangeLast->pNext = pElement;
 		pElement->pNext = pElementToChangeNext;
 	}
+	*/
+
+	// Werte von Element bekommen
+	char elementVorname[40];
+	strcpy_s(elementVorname, pElement->vorname);
+	char elementNachname[40];
+	strcpy_s(elementNachname, pElement->nachname);
+	int elementJahrgang = pElement->jahrgang;
+
+	// Werte von ElementToChange bekommen
+	char elementToChangeVorname[40];
+	strcpy_s(elementToChangeVorname, pElementToChange->vorname);
+	char elementToChangeNachname[40];
+	strcpy_s(elementToChangeNachname, pElementToChange->nachname);
+	int elementToChangeJahrgang = pElementToChange->jahrgang;
+
+	// Element ändern
+	strcpy_s(pElement->vorname, elementToChangeVorname);
+	strcpy_s(pElement->nachname, elementToChangeNachname);
+	pElement->jahrgang = elementToChangeJahrgang;
+
+	// ElementToChange bearbeiten
+	strcpy_s(pElementToChange->vorname, elementVorname);
+	strcpy_s(pElementToChange->nachname, elementNachname);
+	pElementToChange->jahrgang = elementJahrgang;
 
 	return pStart;
 }
@@ -132,21 +157,21 @@ struPerson* sortListWithBubbleSort(struPerson* pStart) {
 	struPerson* pElementLast = NULL;
 	do {
 		doneChanges = 0;
-		for (struPerson* pElement = pStart; pElement->pNext != NULL; pElement = pElement->pNext) {
+		for (struPerson* pElement = pStart; pElement !=NULL && pElement->pNext != NULL; pElement = pElement->pNext) {
 			struPerson* pElementToCompare = pElement->pNext;
 
 			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
-				//wechselt Element
+				// wechselt Element
 				pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElement);
-				//anderenfalles würde eins übersprungen werden, da in der For-schleife vorwärts gegangen wird
+				// anderenfalles würde eins übersprungen werden, da in der For-schleife vorwärts gegangen wird
 				pElement = pElementToCompare;
 				doneChanges++;
 			}
 			else if (strcmp(pElement->nachname, pElementToCompare->nachname) == 0) {
 				if (strcmp(pElement->vorname, pElementToCompare->vorname) > 0) {
-					//wechselt Element
+					// wechselt Element
 					pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElement);
-					//anderenfalles würde eins übersprungen werden, da in der For-schleife vorwärts gegangen wird
+					// anderenfalles würde eins übersprungen werden, da in der For-schleife vorwärts gegangen wird
 					pElement = pElementToCompare;
 					doneChanges++;
 				}
@@ -165,7 +190,7 @@ struPerson* sortListWithBubbleSort(struPerson* pStart) {
 struPerson* sortListWithSelectSort(struPerson* pStart) {
 	struPerson* pElementLast = NULL;
 	struPerson* pElementToCompareLast = NULL;
-	for (struPerson* pElement = pStart; pElement->pNext != NULL; pElement = pElement->pNext) {
+	for (struPerson* pElement = pStart; pElement != NULL && pElement->pNext != NULL; pElement = pElement->pNext) {
 		pElementToCompareLast = pElement;
 		for (struPerson* pElementToCompare = pElement->pNext; pElementToCompare != NULL; pElementToCompare = pElementToCompare->pNext) {
 
