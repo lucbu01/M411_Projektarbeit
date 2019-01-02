@@ -91,11 +91,12 @@ void output(struPerson* pStart) {
 
 /*
 	Autor: Ghezzi Lars, Bucher Luca
-	Datum: 22.12.2018	
+	Datum: 22.12.2018, 28.12.2018
 	Tauscht die Positionen Zweier Elemente.
 */
+//Does not work!!! and it isn't used yet!!!
 struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson* pElementToChange, struPerson* pElementLast, struPerson* pElementToChangeLast) {
-	/*struPerson* pElementNext = pElement->pNext;
+	struPerson* pElementNext = pElement->pNext;
 	struPerson* pElementToChangeNext = pElementToChange->pNext;
 
 	if (pElement == pStart) {
@@ -117,8 +118,16 @@ struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson*
 		pElementToChangeLast->pNext = pElement;
 		pElement->pNext = pElementToChangeNext;
 	}
-	*/
 
+	return pStart;
+}
+
+/*
+	Autor: Bucher Luca
+	Datum: 28.12.2018
+	Tauscht die Inhalte Zweier Elemente.
+*/
+void changeContent(struPerson* pElement, struPerson* pElementToChange) {
 	// Werte von Element bekommen
 	char elementVorname[40];
 	strcpy_s(elementVorname, pElement->vorname);
@@ -142,11 +151,9 @@ struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson*
 	strcpy_s(pElementToChange->vorname, elementVorname);
 	strcpy_s(pElementToChange->nachname, elementNachname);
 	pElementToChange->jahrgang = elementJahrgang;
-
-	return pStart;
 }
 
-/* Problem: manchmal entsteht ein loop!
+/*
 	Autor: Ghezzi Lars
 	Datum: 22.12.2018
 	Sortiert die Liste nach dem BubbleSort Prinzip.
@@ -162,7 +169,7 @@ struPerson* sortListWithBubbleSort(struPerson* pStart) {
 
 			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
 				// wechselt Element
-				pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElement);
+				changeContent(pElement, pElementToCompare);
 				// anderenfalles würde eins übersprungen werden, da in der For-schleife vorwärts gegangen wird
 				pElement = pElementToCompare;
 				doneChanges++;
@@ -170,7 +177,7 @@ struPerson* sortListWithBubbleSort(struPerson* pStart) {
 			else if (strcmp(pElement->nachname, pElementToCompare->nachname) == 0) {
 				if (strcmp(pElement->vorname, pElementToCompare->vorname) > 0) {
 					// wechselt Element
-					pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElement);
+					changeContent(pElement, pElementToCompare);
 					// anderenfalles würde eins übersprungen werden, da in der For-schleife vorwärts gegangen wird
 					pElement = pElementToCompare;
 					doneChanges++;
@@ -196,7 +203,7 @@ struPerson* sortListWithSelectSort(struPerson* pStart) {
 
 			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
 				//wechselt Element
-				pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElementToCompareLast);
+				changeContent(pElement, pElementToCompare);
 				struPerson* pTemp = pElement;
 				pElement = pElementToCompare;
 				pElementToCompare = pTemp;
@@ -204,7 +211,7 @@ struPerson* sortListWithSelectSort(struPerson* pStart) {
 			else if (strcmp(pElement->nachname, pElementToCompare->nachname) == 0) {
 				if (strcmp(pElement->vorname, pElementToCompare->vorname) > 0) {
 					//wechselt Element
-					pStart = changePosition(pStart, pElement, pElementToCompare, pElementLast, pElementToCompareLast);
+					changeContent(pElement, pElementToCompare);
 					struPerson* pTemp = pElement;
 					pElement = pElementToCompare;
 					pElementToCompare = pTemp;
@@ -242,10 +249,10 @@ void main() {
 		gets_s(input);
 
 		if (strcmp(input, "bubbleSort") == 0) {
-			sortListWithBubbleSort(pStart);
+			pStart = sortListWithBubbleSort(pStart);
 		}
 		else if (strcmp(input, "selectSort") == 0) {
-			sortListWithSelectSort(pStart);
+			pStart = sortListWithSelectSort(pStart);
 		}
 		else if (strcmp(input, "deleteElement") == 0) {
 			printf("Vorname: ");
