@@ -8,6 +8,7 @@ typedef struct Person {
     char nachname[40];
     int jahrgang;
     struct Person* pNext;
+	struct Person* pBefore;
 } struPerson;
 
 /*
@@ -32,6 +33,7 @@ struPerson* createList(int anzahl) {
         pNew->pNext = NULL;
 		if (pStart == NULL) pStart = pNew;
         if (pLast != NULL) pLast->pNext = pNew;
+		pNew->pBefore = pLast;
         pLast = pNew;
     }
     return pStart;
@@ -58,20 +60,23 @@ void deleteList(struPerson* pStart) {
 */
 struPerson* deleteElement(struPerson* pStart, const char* pVorname, const char* pNachname) {
 	struPerson* pNext = NULL;
-	struPerson* pLast = NULL;
+	struPerson* pBefore = NULL;
 
 	for (struPerson* pElement = pStart; pElement != NULL; pElement = pNext) {
 		pNext = pElement->pNext;
+		pBefore = pElement->pBefore;
+
 		if (strcmp(pElement->vorname, pVorname) == 0 && strcmp(pElement->nachname, pNachname) == 0) {
 			free(pElement);
-			if (pLast == NULL) {
+			if (pBefore == NULL) {
 				pStart = pNext;
 			}
 			else {
-				pLast->pNext = pNext;
+				pBefore->pNext = pNext;
 			}
-		} else {
-			pLast = pElement;
+			if (pNext != NULL) {
+				pNext->pBefore = pBefore;
+			}
 		}
 	}
 	return pStart;
@@ -90,13 +95,14 @@ void output(struPerson* pStart) {
 }
 
 /*
-	Autor: Ghezzi Lars, Bucher Luca
-	Datum: 22.12.2018, 28.12.2018
+	Autor: Bucher Luca
+	Datum: 03.01.2018
 	Tauscht die Positionen Zweier Elemente.
 */
-//Does not work!!! and it isn't used yet!!!
-struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson* pElementToChange, struPerson* pElementLast, struPerson* pElementToChangeLast) {
+struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson* pElementToChange) {
+	struPerson* pElementBefore = pElement->pBefore;
 	struPerson* pElementNext = pElement->pNext;
+	struPerson* pElementToChangeBefore = pElementToChange->pBefore;
 	struPerson* pElementToChangeNext = pElementToChange->pNext;
 
 	if (pElement == pStart) {
@@ -104,57 +110,54 @@ struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson*
 	}
 
 	// wenn es das erste ist, gibt es keines zuvor
-	if (pElementLast != NULL) {
-		pElementLast->pNext = pElementToChange;
+	if (pElementBefore != NULL) {
+		pElementBefore->pNext = pElementToChange;
 	}
 
 	// schaut ob die Elemente hintereinander sind
 	if (pElement->pNext == pElementToChange) {
+
 		pElementToChange->pNext = pElement;
+		pElementToChange->pBefore = pElementBefore;
+
 		pElement->pNext = pElementToChangeNext;
+		pElement->pBefore = pElementToChange;
+
+		if (pElementToChangeNext != NULL) pElementToChangeNext->pBefore = pElement;
+
+		if (pElementBefore != NULL) pElementBefore->pNext = pElementToChange;
+	}
+	else if (pElementToChange->pNext == pElement) {
+
+		pElement->pNext = pElementToChange;
+		pElement->pBefore = pElementToChangeBefore;
+
+		pElementToChange->pNext = pElementNext;
+		pElementToChange->pBefore = pElement;
+
+		if (pElementNext != NULL) pElementNext->pBefore = pElementToChange;
+
+		if (pElementToChangeBefore != NULL) pElementToChangeBefore->pNext = pElement;
 	}
 	else {
+		if (pElementBefore != NULL) pElementBefore->pNext = pElementToChange;
+		if (pElementNext != NULL) pElementNext->pBefore = pElementToChange;
+
 		pElementToChange->pNext = pElementNext;
-		pElementToChangeLast->pNext = pElement;
+		pElementToChange->pBefore = pElementBefore;
+
+		if (pElementToChangeBefore != NULL) pElementToChangeBefore->pNext = pElement;
+		if (pElementToChangeNext != NULL) pElementToChangeNext->pBefore = pElement;
+
 		pElement->pNext = pElementToChangeNext;
+		pElement->pBefore = pElementToChangeBefore;
 	}
 
 	return pStart;
 }
 
 /*
-	Autor: Bucher Luca
-	Datum: 28.12.2018
-	Tauscht die Inhalte Zweier Elemente.
-*/
-void changeContent(struPerson* pElement, struPerson* pElementToChange) {
-	// Werte von Element bekommen
-	char elementVorname[40];
-	strcpy_s(elementVorname, pElement->vorname);
-	char elementNachname[40];
-	strcpy_s(elementNachname, pElement->nachname);
-	int elementJahrgang = pElement->jahrgang;
-
-	// Werte von ElementToChange bekommen
-	char elementToChangeVorname[40];
-	strcpy_s(elementToChangeVorname, pElementToChange->vorname);
-	char elementToChangeNachname[40];
-	strcpy_s(elementToChangeNachname, pElementToChange->nachname);
-	int elementToChangeJahrgang = pElementToChange->jahrgang;
-
-	// Element ändern
-	strcpy_s(pElement->vorname, elementToChangeVorname);
-	strcpy_s(pElement->nachname, elementToChangeNachname);
-	pElement->jahrgang = elementToChangeJahrgang;
-
-	// ElementToChange bearbeiten
-	strcpy_s(pElementToChange->vorname, elementVorname);
-	strcpy_s(pElementToChange->nachname, elementNachname);
-	pElementToChange->jahrgang = elementJahrgang;
-}
-
-/*
-	Autor: Ghezzi Lars
+	Autor: Ghezzi Lars, Bucher Luca
 	Datum: 22.12.2018
 	Sortiert die Liste nach dem BubbleSort Prinzip.
 */
@@ -169,7 +172,7 @@ struPerson* sortListWithBubbleSort(struPerson* pStart) {
 
 			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
 				// wechselt Element
-				changeContent(pElement, pElementToCompare);
+				pStart = changePosition(pStart, pElement, pElementToCompare);
 				// anderenfalles würde eins übersprungen werden, da in der For-schleife vorwärts gegangen wird
 				pElement = pElementToCompare;
 				doneChanges++;
@@ -177,7 +180,7 @@ struPerson* sortListWithBubbleSort(struPerson* pStart) {
 			else if (strcmp(pElement->nachname, pElementToCompare->nachname) == 0) {
 				if (strcmp(pElement->vorname, pElementToCompare->vorname) > 0) {
 					// wechselt Element
-					changeContent(pElement, pElementToCompare);
+					pStart = changePosition(pStart, pElement, pElementToCompare);
 					// anderenfalles würde eins übersprungen werden, da in der For-schleife vorwärts gegangen wird
 					pElement = pElementToCompare;
 					doneChanges++;
@@ -203,7 +206,7 @@ struPerson* sortListWithSelectSort(struPerson* pStart) {
 
 			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
 				//wechselt Element
-				changeContent(pElement, pElementToCompare);
+				pStart = changePosition(pStart, pElement, pElementToCompare);
 				struPerson* pTemp = pElement;
 				pElement = pElementToCompare;
 				pElementToCompare = pTemp;
@@ -211,7 +214,7 @@ struPerson* sortListWithSelectSort(struPerson* pStart) {
 			else if (strcmp(pElement->nachname, pElementToCompare->nachname) == 0) {
 				if (strcmp(pElement->vorname, pElementToCompare->vorname) > 0) {
 					//wechselt Element
-					changeContent(pElement, pElementToCompare);
+					pStart = changePosition(pStart, pElement, pElementToCompare);
 					struPerson* pTemp = pElement;
 					pElement = pElementToCompare;
 					pElementToCompare = pTemp;
