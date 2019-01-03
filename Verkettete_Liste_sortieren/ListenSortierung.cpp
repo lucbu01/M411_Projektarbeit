@@ -116,41 +116,39 @@ struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson*
 
 	// schaut ob die Elemente hintereinander sind
 	if (pElement->pNext == pElementToChange) {
-
 		pElementToChange->pNext = pElement;
-		pElementToChange->pBefore = pElementBefore;
+/*1*/		pElementToChange->pBefore = pElementBefore;
 
-		pElement->pNext = pElementToChangeNext;
+/*4*/		pElement->pNext = pElementToChangeNext;
 		pElement->pBefore = pElementToChange;
 
-		if (pElementToChangeNext != NULL) pElementToChangeNext->pBefore = pElement;
+/*5*/		if (pElementToChangeNext != NULL) pElementToChangeNext->pBefore = pElement;
 
-		if (pElementBefore != NULL) pElementBefore->pNext = pElementToChange;
+/*8*/		if (pElementBefore != NULL) pElementBefore->pNext = pElementToChange;
 	}
 	else if (pElementToChange->pNext == pElement) {
-
 		pElement->pNext = pElementToChange;
-		pElement->pBefore = pElementToChangeBefore;
+/*2*/		pElement->pBefore = pElementToChangeBefore;
 
-		pElementToChange->pNext = pElementNext;
+/*3*/		pElementToChange->pNext = pElementNext;
 		pElementToChange->pBefore = pElement;
 
-		if (pElementNext != NULL) pElementNext->pBefore = pElementToChange;
+/*6*/		if (pElementNext != NULL) pElementNext->pBefore = pElementToChange;
 
-		if (pElementToChangeBefore != NULL) pElementToChangeBefore->pNext = pElement;
+/*7*/		if (pElementToChangeBefore != NULL) pElementToChangeBefore->pNext = pElement;
 	}
 	else {
-		if (pElementBefore != NULL) pElementBefore->pNext = pElementToChange;
-		if (pElementNext != NULL) pElementNext->pBefore = pElementToChange;
+/*1*/		pElement->pNext = pElementToChangeNext;
+/*2*/		pElement->pBefore = pElementToChangeBefore;
 
-		pElementToChange->pNext = pElementNext;
-		pElementToChange->pBefore = pElementBefore;
+/*3*/		pElementToChange->pNext = pElementNext;
+/*4*/		pElementToChange->pBefore = pElementBefore;
 
-		if (pElementToChangeBefore != NULL) pElementToChangeBefore->pNext = pElement;
-		if (pElementToChangeNext != NULL) pElementToChangeNext->pBefore = pElement;
+/*5*/		if (pElementBefore != NULL) pElementBefore->pNext = pElementToChange;
+/*6*/		if (pElementNext != NULL) pElementNext->pBefore = pElementToChange;
 
-		pElement->pNext = pElementToChangeNext;
-		pElement->pBefore = pElementToChangeBefore;
+/*7*/		if (pElementToChangeBefore != NULL) pElementToChangeBefore->pNext = pElement;
+/*8*/		if (pElementToChangeNext != NULL) pElementToChangeNext->pBefore = pElement;
 	}
 
 	return pStart;
