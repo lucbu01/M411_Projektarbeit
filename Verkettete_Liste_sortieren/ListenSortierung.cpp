@@ -82,7 +82,6 @@ struPerson* deleteElement(struPerson* pStart, const char* pVorname, const char* 
 	return pStart;
 }
 
-
 /*
 	Autor: Ghezzi Lars, Bucher Luca
 	Datum: 14.12.2018
@@ -114,41 +113,45 @@ struPerson* changePosition(struPerson* pStart, struPerson* pElement, struPerson*
 		pElementBefore->pNext = pElementToChange;
 	}
 
+	int elementToChangeAfterElement = 0;
+	int elementAfterElementToChange = 0;
+	int elementsNotAfterEachOther = 0;
+
 	// schaut ob die Elemente hintereinander sind
 	if (pElement->pNext == pElementToChange) {
 		pElementToChange->pNext = pElement;
-/*1*/		pElementToChange->pBefore = pElementBefore;
-
-/*4*/		pElement->pNext = pElementToChangeNext;
 		pElement->pBefore = pElementToChange;
-
-/*5*/		if (pElementToChangeNext != NULL) pElementToChangeNext->pBefore = pElement;
-
-/*8*/		if (pElementBefore != NULL) pElementBefore->pNext = pElementToChange;
+		elementToChangeAfterElement = 1;
 	}
 	else if (pElementToChange->pNext == pElement) {
 		pElement->pNext = pElementToChange;
-/*2*/		pElement->pBefore = pElementToChangeBefore;
-
-/*3*/		pElementToChange->pNext = pElementNext;
 		pElementToChange->pBefore = pElement;
-
-/*6*/		if (pElementNext != NULL) pElementNext->pBefore = pElementToChange;
-
-/*7*/		if (pElementToChangeBefore != NULL) pElementToChangeBefore->pNext = pElement;
+		elementAfterElementToChange = 1;
 	}
 	else {
-/*1*/		pElement->pNext = pElementToChangeNext;
-/*2*/		pElement->pBefore = pElementToChangeBefore;
+		elementsNotAfterEachOther = 1;
+	}
 
-/*3*/		pElementToChange->pNext = pElementNext;
-/*4*/		pElementToChange->pBefore = pElementBefore;
+	// Wenn ElementToChange direkt nach Element kommt oder die beiden nicht hintereinander sind.
+	if (elementToChangeAfterElement > 0 || elementsNotAfterEachOther > 0) {
+		pElementToChange->pBefore = pElementBefore;
 
-/*5*/		if (pElementBefore != NULL) pElementBefore->pNext = pElementToChange;
-/*6*/		if (pElementNext != NULL) pElementNext->pBefore = pElementToChange;
+		pElement->pNext = pElementToChangeNext;
 
-/*7*/		if (pElementToChangeBefore != NULL) pElementToChangeBefore->pNext = pElement;
-/*8*/		if (pElementToChangeNext != NULL) pElementToChangeNext->pBefore = pElement;
+		if (pElementToChangeNext != NULL) pElementToChangeNext->pBefore = pElement;
+
+		if (pElementBefore != NULL) pElementBefore->pNext = pElementToChange;
+	}
+
+	// Wenn Element direkt nach ElementToChange kommt oder die beiden nicht hintereinander sind.
+	if (elementAfterElementToChange > 0 || elementsNotAfterEachOther > 0) {
+		pElement->pBefore = pElementToChangeBefore;
+
+		pElementToChange->pNext = pElementNext;
+
+		if (pElementNext != NULL) pElementNext->pBefore = pElementToChange;
+
+		if (pElementToChangeBefore != NULL) pElementToChangeBefore->pNext = pElement;
 	}
 
 	return pStart;
@@ -256,12 +259,12 @@ void main() {
 			pStart = sortListWithSelectSort(pStart);
 		}
 		else if (strcmp(input, "deleteElement") == 0) {
-			printf("Vorname: ");
-			char vorname[40];
-			gets_s(vorname);
 			printf("Nachname: ");
 			char nachname[40];
 			gets_s(nachname);
+			printf("Vorname: ");
+			char vorname[40];
+			gets_s(vorname);
 			pStart = deleteElement(pStart, vorname, nachname);
 		}
 		else if (strcmp(input, "exit") == 0) {
