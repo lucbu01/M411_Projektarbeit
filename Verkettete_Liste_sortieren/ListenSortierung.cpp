@@ -199,10 +199,7 @@ struPerson* sortListWithBubbleSort(struPerson* pStart) {
 	Sortiert die Liste nach dem SelectSort Prinzip.
 */
 struPerson* sortListWithSelectSort(struPerson* pStart) {
-	struPerson* pElementLast = NULL;
-	struPerson* pElementToCompareLast = NULL;
 	for (struPerson* pElement = pStart; pElement != NULL && pElement->pNext != NULL; pElement = pElement->pNext) {
-		pElementToCompareLast = pElement;
 		for (struPerson* pElementToCompare = pElement->pNext; pElementToCompare != NULL; pElementToCompare = pElementToCompare->pNext) {
 
 			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
@@ -221,9 +218,7 @@ struPerson* sortListWithSelectSort(struPerson* pStart) {
 					pElementToCompare = pTemp;
 				}
 			}
-			pElementToCompareLast = pElementToCompare;
 		}
-		pElementLast = pElement;
 	}
 	return pStart;
 }
