@@ -83,13 +83,13 @@ struPerson* deleteElement(struPerson* pStart, const char* pVorname, const char* 
 }
 
 /*
-	Autor: Ghezzi Lars, Bucher Luca
-	Datum: 14.12.2018
+	Autor: Bucher Luca
+	Datum: 10.01.2019
 	Gibt alle Elemente der Liste aus
 */
 void output(struPerson* pStart) {
     for (struPerson* pTemp = pStart; pTemp != NULL; pTemp = pTemp->pNext) {
-        printf("Element: %s %s %i\n", pTemp->nachname, pTemp->vorname, pTemp->jahrgang);
+        printf("Nachname: %s\tVorname: %s\tJahrgang: %i\n", pTemp->nachname, pTemp->vorname, pTemp->jahrgang);
     }
 }
 
