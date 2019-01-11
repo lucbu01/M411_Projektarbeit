@@ -96,6 +96,24 @@ void output(struPerson* pStart, int anzahl) {
 }
 
 /*
+    Autor: Bucher Luca
+    Datum: 11.01.2019
+    Gibt die gewuenschte Anzahl Elemente der Liste rueckaerts aus (0 fuer alle Elemente)
+*/
+void outputr(struPerson* pStart, int anzahl) {
+    anzahl = anzahl == 0 ? INT_MAX : anzahl;
+    struPerson* pTemp = pStart;
+    while (pTemp->pNext != NULL) {
+        pTemp = pTemp->pNext;
+    }
+    while (anzahl > 0 && pTemp != NULL) {
+        printf("Nachname: %s\tVorname: %s\tJahrgang: %i\n", pTemp->nachname, pTemp->vorname, pTemp->jahrgang);
+        pTemp = pTemp->pBefore;
+        anzahl--;
+    }
+}
+
+/*
 	Autor: Bucher Luca
 	Datum: 03.01.2018
 	Tauscht die Positionen Zweier Elemente.
@@ -256,6 +274,7 @@ void main() {
 	while (wiederholen != 0) {
 		printf("\nWaehlen Sie eine Option:\n\n");
         printf("output - Liste ausgeben\n");
+        printf("outputr - Liste rueckwaerts ausgeben\n");
 		printf("bubbleSort - Wendet den BubbleSort an der Liste an.\n");
 		printf("selectSort - Wendet den SelectSort an der Liste an.\n");
 		printf("deleteElement - Loescht ein gewuenschtes Element aus der Liste.\n");
@@ -269,6 +288,12 @@ void main() {
             scanf_s("%i", &anzahl);
             getchar();
             output(pStart, anzahl);
+        } else if (strcmp(input, "outputr") == 0) {
+            printf("Anzahl Elemente [0 fuer alle Elemente]: ");
+            int anzahl = 0;
+            scanf_s("%i", &anzahl);
+            getchar();
+            outputr(pStart, anzahl);
         }
 		else if (strcmp(input, "bubbleSort") == 0) {
 			pStart = sortListWithBubbleSort(pStart);
