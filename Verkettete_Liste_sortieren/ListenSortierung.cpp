@@ -85,11 +85,13 @@ struPerson* deleteElement(struPerson* pStart, const char* pVorname, const char* 
 /*
 	Autor: Bucher Luca
 	Datum: 10.01.2019
-	Gibt alle Elemente der Liste aus
+	Gibt die gewuenschte Anzahl Elemente der Liste aus (0 fuer alle Elemente)
 */
-void output(struPerson* pStart) {
-    for (struPerson* pTemp = pStart; pTemp != NULL; pTemp = pTemp->pNext) {
-        printf("Nachname: %s\tVorname: %s\tJahrgang: %i\n", pTemp->nachname, pTemp->vorname, pTemp->jahrgang);
+void output(struPerson* pStart, int anzahl) {
+    anzahl = anzahl == 0 ? INT_MAX : anzahl;
+    for (struPerson* pTemp = pStart; anzahl > 0 && pTemp != NULL; pTemp = pTemp->pNext) {
+            printf("Nachname: %s\tVorname: %s\tJahrgang: %i\n", pTemp->nachname, pTemp->vorname, pTemp->jahrgang);
+            anzahl--;
     }
 }
 
@@ -171,22 +173,29 @@ struPerson* sortListWithBubbleSort(struPerson* pStart) {
 		for (struPerson* pElement = pStart; pElement !=NULL && pElement->pNext != NULL; pElement = pElement->pNext) {
 			struPerson* pElementToCompare = pElement->pNext;
 
+            int change = 0; // boolean
 			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
-				// wechselt Element
-				pStart = changePosition(pStart, pElement, pElementToCompare);
-				// anderenfalles würde eins übersprungen werden, da in der For-schleife vorwärts gegangen wird
-				pElement = pElementToCompare;
-				doneChanges++;
+                change = 1;
 			}
 			else if (strcmp(pElement->nachname, pElementToCompare->nachname) == 0) {
 				if (strcmp(pElement->vorname, pElementToCompare->vorname) > 0) {
-					// wechselt Element
-					pStart = changePosition(pStart, pElement, pElementToCompare);
-					// anderenfalles würde eins übersprungen werden, da in der For-schleife vorwärts gegangen wird
-					pElement = pElementToCompare;
-					doneChanges++;
+                    change = 1;
 				}
+                else if (strcmp(pElement->vorname, pElementToCompare->vorname) == 0) {
+                    if (pElement->jahrgang > pElementToCompare->jahrgang) {
+                        change = 1;
+                    }
+                }
 			}
+
+            if (change == 1) {
+                // wechselt Element
+                pStart = changePosition(pStart, pElement, pElementToCompare);
+                // anderenfalles würde eins übersprungen werden, da in der For-schleife vorwärts gegangen wird
+                pElement = pElementToCompare;
+                doneChanges++;
+            }
+
 			pElementLast = pElement;
 		}
 	} while (doneChanges > 0); // Wenn es keine Aenderungen mehr gibt, ist die Liste sortiert
@@ -194,7 +203,7 @@ struPerson* sortListWithBubbleSort(struPerson* pStart) {
 }
 
 /*
-	Autor: Ghezzi Lars
+	Autor: Ghezzi Lars, Bucher Luca
 	Datum: 22.12.2018
 	Sortiert die Liste nach dem SelectSort Prinzip.
 */
@@ -202,22 +211,28 @@ struPerson* sortListWithSelectSort(struPerson* pStart) {
 	for (struPerson* pElement = pStart; pElement != NULL && pElement->pNext != NULL; pElement = pElement->pNext) {
 		for (struPerson* pElementToCompare = pElement->pNext; pElementToCompare != NULL; pElementToCompare = pElementToCompare->pNext) {
 
+            int change = 0; // boolean
 			if (strcmp(pElement->nachname, pElementToCompare->nachname) > 0) {
-				//wechselt Element
-				pStart = changePosition(pStart, pElement, pElementToCompare);
-				struPerson* pTemp = pElement;
-				pElement = pElementToCompare;
-				pElementToCompare = pTemp;
+                change = 1;
 			}
 			else if (strcmp(pElement->nachname, pElementToCompare->nachname) == 0) {
 				if (strcmp(pElement->vorname, pElementToCompare->vorname) > 0) {
-					//wechselt Element
-					pStart = changePosition(pStart, pElement, pElementToCompare);
-					struPerson* pTemp = pElement;
-					pElement = pElementToCompare;
-					pElementToCompare = pTemp;
-				}
+                    change = 1;
+                }
+                else if (strcmp(pElement->vorname, pElementToCompare->vorname) == 0){
+                    if (pElement->jahrgang > pElementToCompare->jahrgang) {
+                        change = 1;
+                    }
+                }
 			}
+
+            if (change == 1) {
+                //wechselt Element
+                pStart = changePosition(pStart, pElement, pElementToCompare);
+                struPerson* pTemp = pElement;
+                pElement = pElementToCompare;
+                pElementToCompare = pTemp;
+            }
 		}
 	}
 	return pStart;
@@ -239,15 +254,23 @@ void main() {
 	char input[100];
 	int wiederholen = 1;
 	while (wiederholen != 0) {
-		output(pStart);
 		printf("\nWaehlen Sie eine Option:\n\n");
+        printf("output - Liste ausgeben\n");
 		printf("bubbleSort - Wendet den BubbleSort an der Liste an.\n");
 		printf("selectSort - Wendet den SelectSort an der Liste an.\n");
 		printf("deleteElement - Loescht ein gewuenschtes Element aus der Liste.\n");
+        printf("deleteList - Loescht die Liste.\n");
 		printf("exit - Loescht die Liste und schliesst das Programm.\n\n>");
 		gets_s(input);
 
-		if (strcmp(input, "bubbleSort") == 0) {
+        if (strcmp(input, "output") == 0) {
+            printf("Anzahl Elemente [0 fuer alle Elemente]: ");
+            int anzahl = 0;
+            scanf_s("%i", &anzahl);
+            getchar();
+            output(pStart, anzahl);
+        }
+		else if (strcmp(input, "bubbleSort") == 0) {
 			pStart = sortListWithBubbleSort(pStart);
 		}
 		else if (strcmp(input, "selectSort") == 0) {
@@ -261,10 +284,17 @@ void main() {
 			char vorname[40];
 			gets_s(vorname);
 			pStart = deleteElement(pStart, vorname, nachname);
-		}
+        }
+        else if (strcmp(input, "deleteList") == 0) {
+            deleteList(pStart);
+            wiederholen = 0;
+            printf("Die Liste Wurde geloescht.\n\n");
+            main();
+        }
 		else if (strcmp(input, "exit") == 0) {
 			deleteList(pStart);
 			wiederholen = 0;
+            system("pause");
 		}
 		else {
 			printf("\nDie Anweisung wurde nicht gefunden.\n\n");
@@ -272,5 +302,4 @@ void main() {
 
 	}
 
-    system("pause");
 }
