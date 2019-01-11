@@ -83,7 +83,7 @@ struPerson* deleteElement(struPerson* pStart, const char* pVorname, const char* 
 }
 
 /*
-	Autor: Bucher Luca
+	Autor: Bucher Luca, Ghezzi Lars
 	Datum: 10.01.2019
 	Gibt die gewuenschte Anzahl Elemente der Liste aus (0 fuer alle Elemente)
 */
@@ -221,7 +221,7 @@ struPerson* sortListWithBubbleSort(struPerson* pStart) {
 }
 
 /*
-	Autor: Ghezzi Lars, Bucher Luca
+	Autor: Ghezzi Lars
 	Datum: 22.12.2018
 	Sortiert die Liste nach dem SelectSort Prinzip.
 */
